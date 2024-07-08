@@ -1,0 +1,6 @@
+# SCsub
+Import('env')
+Import('env_modules')
+
+env_sadconsole = env_modules.Clone()
+env_sadconsole.add_source_files(env.modules_sources, "*.cpp")

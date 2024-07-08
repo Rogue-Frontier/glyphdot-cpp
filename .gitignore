@@ -1,0 +1,5 @@
+executables/*
+.git/*
+.vs/*
+__pycache__/*
+*.obj
