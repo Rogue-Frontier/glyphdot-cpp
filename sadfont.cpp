@@ -17,7 +17,6 @@ void SadFont::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_glyph_height", "height"), &SadFont::set_glyph_height);
 	ClassDB::bind_method(D_METHOD("get_glyph_height"), &SadFont::get_glyph_height);
-
 	
 	ClassDB::bind_method(D_METHOD("set_glyph_padding", "padding"), &SadFont::set_glyph_padding);
 	ClassDB::bind_method(D_METHOD("get_glyph_padding"), &SadFont::get_glyph_padding);
@@ -28,10 +27,8 @@ void SadFont::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_solid_glyph_index", "index"), &SadFont::set_solid_glyph_index);
 	ClassDB::bind_method(D_METHOD("get_solid_glyph_index"), &SadFont::get_solid_glyph_index);
 
-
 	ClassDB::bind_method(D_METHOD("get_glyph_size"), &SadFont::get_glyph_size);
 	ClassDB::bind_method(D_METHOD("get_glyph_rect", "index"), &SadFont::get_glyph_rect);
-
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "font", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_font", "get_font");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "glyph_width"), "set_glyph_width", "get_glyph_width");

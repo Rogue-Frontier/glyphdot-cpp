@@ -17,7 +17,6 @@ class SadSurface : public Node2D {
 		void draw(CanvasItem *p_surface, Ref<SadFont> p_font, Vector2i p_pos) {
 			Vector2i glyph_size = p_font->get_glyph_size();
 			RID canvas = p_surface->get_canvas_item();
-
 			p_surface->draw_rect(Rect2i(p_pos * glyph_size, glyph_size), back);
 			p_font->font->draw_rect_region(canvas, Rect2i(p_pos * glyph_size, glyph_size), src, front);
 		}
@@ -44,11 +43,8 @@ protected:
 	bool _set(const StringName &p_name, const Variant &p_value);
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
-
 	void _notification(int p_notification);
 	static void _bind_methods();
-
-
 public:
 	static inline SadCell empty = SadCell{ Color::hex(0), Color::hex(0), Rect2i() };
 	Color default_back = Color::hex64(0);
@@ -123,7 +119,7 @@ public:
 		}
 		return 0;
 	}
-	Vector2i index_to_pos(int index) const { return Vector2i(index % grid_width, index / grid_width); }
+	Vector2i index_to_pos(int ind) const { return Vector2i(ind % grid_width, ind / grid_width); }
 	int pos_to_index(int x, int y) const { return y * grid_width + x;}
 
 	void set_font(Ref<SadFont> p_font) {
