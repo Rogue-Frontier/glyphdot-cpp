@@ -4,7 +4,7 @@
 
 #include "modules/register_module_types.h"
 
-void initialize_sadconsole_module(ModuleInitializationLevel p_level);
-void uninitialize_sadconsole_module(ModuleInitializationLevel p_level);
+void initialize_glyphdot_module(ModuleInitializationLevel p_level);
+void uninitialize_glyphdot_module(ModuleInitializationLevel p_level);
 
 #endif

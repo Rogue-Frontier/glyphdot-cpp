@@ -1,12 +1,12 @@
-#ifndef SADFONT_H
-#define SADFONT_H
+#ifndef GLYPH_FONT_H
+#define GLYPH_FONT_H
 #include "core/io/resource.h"
 #include "core/math/vector2i.h"
 #include "core/math/rect2i.h"
 #include "scene/resources/texture.h"
 
-class SadFont : public Resource {
-	GDCLASS(SadFont, Resource);
+class GlyphFont : public Resource {
+	GDCLASS(GlyphFont, Resource);
 
 	protected:
 	static void _bind_methods();
@@ -39,11 +39,9 @@ public:
 	int get_solid_glyph_index() const { return solid_glyph_index; }
 
 	Vector2i get_glyph_size() const { return Vector2i(glyph_width, glyph_height); }
-
 	Rect2i get_glyph_rect(int index) const;
 
-
-	SadFont() {}
-	~SadFont() {}
+	GlyphFont() {}
+	~GlyphFont() {}
 };
 #endif

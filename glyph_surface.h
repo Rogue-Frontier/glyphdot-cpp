@@ -1,24 +1,24 @@
-#ifndef SADCONSOLE_H
-#define SADCONSOLE_H
+#ifndef GLYPH_SURFACE_H
+#define GLYPH_SURFACE_H
 
-#include "sadfont.h"
+#include "glyph_font.h"
 
 #include "core/templates/vector.h"
 #include "scene/main/canvas_item.h"
 #include "scene/2d/node_2d.h"
 #include "core/math/color.h"
 
-class SadSurface : public Node2D {
-	GDCLASS(SadSurface, Node2D);
-	struct SadCell {
+class GlyphSurface : public Node2D {
+	GDCLASS(GlyphSurface, Node2D);
+	struct GlyphCell {
 		Color front;
 		Color back;
-		Rect2i src;
-		void draw(CanvasItem *p_surface, Ref<SadFont> p_font, Vector2i p_pos) {
+		int glyph;
+		void draw(CanvasItem *p_surface, Ref<GlyphFont> p_font, Vector2i p_pos) {
 			Vector2i glyph_size = p_font->get_glyph_size();
 			RID canvas = p_surface->get_canvas_item();
 			p_surface->draw_rect(Rect2i(p_pos * glyph_size, glyph_size), back);
-			p_font->font->draw_rect_region(canvas, Rect2i(p_pos * glyph_size, glyph_size), src, front);
+			p_font->font->draw_rect_region(canvas, Rect2i(p_pos * glyph_size, glyph_size), p_font->get_glyph_rect(glyph), front);
 		}
 	};
 	void resize() {
@@ -28,12 +28,12 @@ class SadSurface : public Node2D {
 		}
 		cells.resize(count);
 	}
-	SadCell *get_cell_pointer_at(int x, int y) const {
+	GlyphCell *get_cell_pointer_at(int x, int y) const {
 		return get_cell_pointer(pos_to_index(x, y));
 	}
-	SadCell *get_cell_pointer(int index) const {
+	GlyphCell *get_cell_pointer(int index) const {
 		if (index > -1 && index < cells.size()) {
-			SadCell *c = (SadCell *)(&cells[index]);
+			GlyphCell *c = (GlyphCell *)(&cells[index]);
 			return c;
 		} else {
 			return 0;
@@ -46,15 +46,15 @@ protected:
 	void _notification(int p_notification);
 	static void _bind_methods();
 public:
-	static inline SadCell empty = SadCell{ Color::hex(0), Color::hex(0), Rect2i() };
+	static inline GlyphCell empty = GlyphCell{ Color::hex(0), Color::hex(0), 0 };
 	Color default_back = Color::hex64(0);
 	Color default_front = Color::hex64(0);
-	Ref<SadFont> font;
+	Ref<GlyphFont> font;
 	int grid_width;
 	int grid_height;
-	Vector<SadCell> cells;
+	Vector<GlyphCell> cells;
 
-	void clear() { cells.fill(SadCell{ default_front, default_back, Rect2i() }); }
+	void clear() { cells.fill(GlyphCell{ default_front, default_back, 0 }); }
 	int get_glyph_count() const { return grid_width * grid_height; }
 	int get_grid_width() const { return grid_width; }
 	void set_grid_width(int p_grid_width) {
@@ -74,32 +74,32 @@ public:
 	}
 	void set_cell(int x, int y, int glyph, Color front, Color back) {
 		int ind = pos_to_index(x, y);
-		SadCell *cell = get_cell_pointer(ind);
+		GlyphCell *cell = get_cell_pointer(ind);
 		if (cell && font.is_valid()) {
-			*cell = SadCell{ front, back, font->get_glyph_rect(glyph) };
+			*cell = GlyphCell{ front, back, glyph };
 		}
 	}
 	void set_back(int x, int y, Color back) {
-		SadCell *cell = get_cell_pointer_at(x, y);
+		GlyphCell *cell = get_cell_pointer_at(x, y);
 		if (cell) {
 			cell->back = back;
 		}
 	}
 	Color get_back(int x, int y) {
-		SadCell *cell = get_cell_pointer_at(x, y);
+		GlyphCell *cell = get_cell_pointer_at(x, y);
 		if (cell) {
 			return cell->back;
 		}
 		return Color::hex(0);
 	}
 	void set_front(int x, int y, Color front) {
-		SadCell *cell = get_cell_pointer_at(x, y);
+		GlyphCell *cell = get_cell_pointer_at(x, y);
 		if (cell) {
 			cell->front = front;
 		}
 	}
 	Color get_front(int x, int y) {
-		SadCell *cell = get_cell_pointer_at(x, y);
+		GlyphCell *cell = get_cell_pointer_at(x, y);
 		if (cell) {
 			return cell->front;
 		}
@@ -107,30 +107,30 @@ public:
 	}
 	void set_glyph(int x, int y, int glyph) {
 		int ind = pos_to_index(x, y);
-		SadCell *cell = get_cell_pointer(ind);
-		if (cell && font.is_valid()) {
-			cell->src = font->get_glyph_rect(ind);
+		GlyphCell *cell = get_cell_pointer(ind);
+		if (cell) {
+			cell->glyph = glyph;
 		}
 	}
 	int get_glyph(int x, int y) {
-		SadCell *cell = get_cell_pointer_at(x, y);
+		GlyphCell *cell = get_cell_pointer_at(x, y);
 		if (cell) {
-			return 1;
+			return cell->glyph;
 		}
 		return 0;
 	}
 	Vector2i index_to_pos(int ind) const { return Vector2i(ind % grid_width, ind / grid_width); }
 	int pos_to_index(int x, int y) const { return y * grid_width + x;}
 
-	void set_font(Ref<SadFont> p_font) {
+	void set_font(Ref<GlyphFont> p_font) {
 		if (p_font.is_null()) {
 			return;
 		}
 		font = p_font;
 	}
-	Ref<SadFont> get_font() const { return font; }
-	SadSurface(){}
-	~SadSurface() {}
+	Ref<GlyphFont> get_font() const { return font; }
+	GlyphSurface(){}
+	~GlyphSurface() {}
 };
 
 #endif 
